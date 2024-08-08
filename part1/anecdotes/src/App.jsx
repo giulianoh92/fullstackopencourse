@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const App = () => {
   const initialAnecdotes = [
@@ -14,6 +14,14 @@ const App = () => {
 
   const [anecdotes, setAnecdotes] = useState(initialAnecdotes)
   const [selected, setSelected] = useState(0)
+  const [mostVotedIndex, setMostVotedIndex] = useState(0)
+
+  useEffect(() => {
+    // Find the index of the anecdote with the most votes
+    const maxVotesIndex = anecdotes.reduce((maxIndex, current, index, array) => 
+      current.votes > array[maxIndex].votes ? index : maxIndex, 0)
+    setMostVotedIndex(maxVotesIndex)
+  }, [anecdotes])
 
   const vote = () => {
     const updatedAnecdotes = [...anecdotes]
@@ -23,12 +31,16 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected].text}</p>
       <p>has {anecdotes[selected].votes} votes</p>
       <button onClick={vote}>vote</button>
       <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>
         next anecdote
       </button>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[mostVotedIndex].text}</p>
+      <p>has {anecdotes[mostVotedIndex].votes} votes</p>
     </div>
   )
 }
