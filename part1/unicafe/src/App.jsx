@@ -6,6 +6,12 @@ const Button = (props) => (
   </button>
 )
 
+const StatisticLine = ({ text, value, isPercentage = false }) => {
+  return (
+    <p>{text} {value}{isPercentage ? ' %' : ''}</p>
+  );
+}
+
 const Statistics = ({ good, neutral, bad, hasFeedback }) => {
   if (!hasFeedback) {
     return (
@@ -13,20 +19,24 @@ const Statistics = ({ good, neutral, bad, hasFeedback }) => {
         <h1>statistics</h1>
         <p>No feedback given</p>
       </>
-    )
+    );
   }
+
+  const total = good + neutral + bad;
+  const average = (good + (neutral * 0) + (bad * -1)) / (total || 1);
+  const positivePercentage = (good / total) * 100 || 0;
 
   return (
     <>
       <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {good + neutral + bad}</p>
-      <p>average {(good + (neutral * 0) + (bad * -1)) / (good + neutral + bad || 1)}</p>
-      <p>positive {((good / (good + neutral + bad)) * 100) || 0} %</p>
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={total} />
+      <StatisticLine text="average" value={average} />
+      <StatisticLine text="positive" value={positivePercentage} isPercentage />
     </>
-  )
+  );
 }
 
 const App = () => {
